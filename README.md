@@ -42,7 +42,7 @@ sudo ./install.sh
 
 This will:
 - Copy files to `/opt/hmi`
-- Install Python dependencies
+- Install Python dependencies inside a virtual environment at `/opt/hmi/venv`
 - Install and enable the systemd service `hmi.service`
 - Start the service immediately
 
@@ -52,7 +52,10 @@ If you prefer manual setup:
 
 1. Install dependencies:
 ```bash
-python3 -m pip install -r requirements.txt
+# Create a virtualenv and install here (recommended):
+python3 -m venv venv
+venv/bin/python -m pip install --upgrade pip setuptools
+venv/bin/pip install -r requirements.txt
 ```
 
 2. Place a splash image named `splash.png` (800x480 recommended) in the same directory as `main.py`.

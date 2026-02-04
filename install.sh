@@ -37,8 +37,19 @@ if command -v python3 >/dev/null 2>&1; then
   fi
 
   echo "Installing Python requirements..."
-  python3 -m pip install --upgrade pip setuptools
-  python3 -m pip install -r "$DEST_DIR/requirements.txt"
+  # Create a virtual environment inside the install dir and install packages there
+  VENV_DIR="$DEST_DIR/venv"
+  echo "Creating virtualenv at $VENV_DIR"
+  python3 -m venv "$VENV_DIR" || {
+    echo "python3-venv not available, installing..."
+    apt-get update
+    DEBIAN_FRONTEND=noninteractive apt-get install -y python3-venv
+    python3 -m venv "$VENV_DIR"
+  }
+
+  echo "Upgrading pip inside venv and installing requirements"
+  "$VENV_DIR/bin/python3" -m pip install --upgrade pip setuptools
+  "$VENV_DIR/bin/pip" install -r "$DEST_DIR/requirements.txt"
 else
   echo "python3 not found - please install Python 3"
   exit 1

@@ -9,7 +9,7 @@ User=pi
 Group=pi
 Environment=DISPLAY=:0
 Environment=XAUTHORITY=/home/pi/.Xauthority
-ExecStart=/usr/bin/python3 /opt/hmi/main.py
+ExecStart=/opt/hmi/venv/bin/python3 /opt/hmi/main.py
 Restart=always
 RestartSec=5
 
