@@ -1,0 +1,17 @@
+[Unit]
+Description=HMI Tkinter Service
+After=network.target graphical.target
+Wants=graphical-session.target
+
+[Service]
+Type=simple
+User=pi
+Group=pi
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=/home/pi/.Xauthority
+ExecStart=/usr/bin/python3 /opt/hmi/main.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
