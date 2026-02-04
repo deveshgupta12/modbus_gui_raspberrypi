@@ -16,12 +16,26 @@ cp -a "$SRC_DIR"/* "$DEST_DIR/"
 
 # Install python requirements
 if command -v python3 >/dev/null 2>&1; then
-  echo "Ensuring pip is installed..."
-  python3 -m ensurepip --upgrade 2>/dev/null || {
-    echo "Installing pip via apt..."
-    apt-get update
-    apt-get install -y python3-pip
-  }
+  echo "Checking for pip..."
+  if python3 -m pip --version >/dev/null 2>&1; then
+    echo "pip is available"
+  else
+    echo "pip not found, attempting to bootstrap with ensurepip..."
+    if python3 -m ensurepip --upgrade >/dev/null 2>&1; then
+      echo "ensurepip succeeded"
+    else
+      echo "ensurepip failed, installing python3-pip via apt"
+      apt-get update
+      DEBIAN_FRONTEND=noninteractive apt-get install -y python3-pip
+    fi
+
+    # final check
+    if ! python3 -m pip --version >/dev/null 2>&1; then
+      echo "pip installation failed; please install pip manually and re-run the installer"
+      exit 1
+    fi
+  fi
+
   echo "Installing Python requirements..."
   python3 -m pip install --upgrade pip setuptools
   python3 -m pip install -r "$DEST_DIR/requirements.txt"
