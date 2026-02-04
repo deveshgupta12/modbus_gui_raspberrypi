@@ -109,6 +109,29 @@ sudo systemctl disable hmi.service
 - X11 display server running
 - NetworkManager or alternative WiFi tools (`iwlist`, `wpa_cli`)
 
+### CLI-only systems (no display manager)
+
+If your Raspberry Pi is running the CLI only (no display manager), you can start the HMI by installing a minimal X environment and enabling the provided `hmi-x.service`:
+
+1. Install minimal X and a session launcher:
+
+```bash
+sudo apt update
+sudo apt install -y xserver-xorg xinit openbox
+```
+
+2. Install the project (if not already) and enable the X service:
+
+```bash
+sudo ./install.sh
+sudo cp /opt/hmi/hmi-x.service /etc/systemd/system/hmi-x.service
+sudo systemctl daemon-reload
+sudo systemctl enable hmi-x.service
+sudo systemctl start hmi-x.service
+```
+
+This will start a minimal X session on `tty1` and run the HMI; logs are available via `journalctl -u hmi-x.service -f`.
+
 ## WiFi Connection
 
 The application supports two methods:
