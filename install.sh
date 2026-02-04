@@ -16,6 +16,14 @@ cp -a "$SRC_DIR"/* "$DEST_DIR/"
 
 # Install python requirements
 if command -v python3 >/dev/null 2>&1; then
+  echo "Ensuring pip is installed..."
+  python3 -m ensurepip --upgrade 2>/dev/null || {
+    echo "Installing pip via apt..."
+    apt-get update
+    apt-get install -y python3-pip
+  }
+  echo "Installing Python requirements..."
+  python3 -m pip install --upgrade pip setuptools
   python3 -m pip install -r "$DEST_DIR/requirements.txt"
 else
   echo "python3 not found - please install Python 3"
